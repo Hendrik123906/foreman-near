@@ -176,6 +176,14 @@ export default function Home() {
       if (res.outcome === "accepted") {
         t.finalNEAR = res.finalNEAR;
         t.status = "accepted";
+        // Keep the books balanced: if the agreed price is above the plan,
+        // the client tops up the escrow by the difference.
+        const topup = round2((res.finalNEAR ?? 0) - t.plannedNEAR);
+        if (topup > 0) {
+          job.escrowLocked = round2(job.escrowLocked + topup);
+          job.log.push(`Harga akhir di atas rencana — escrow di-top-up ${fmtNEAR(topup)} (klien).`);
+          pushReceipt(s, job, newReceipt(job.id, "escrow-topup", "You (client)", "Foreman escrow", topup, `"${t.title}" — harga akhir ${fmtNEAR(res.finalNEAR ?? 0)} di atas rencana ${fmtNEAR(t.plannedNEAR)}.`, "info", t.id));
+        }
         pushReceipt(s, job, newReceipt(job.id, "quote-accepted", "Foreman", agent.name, res.finalNEAR ?? 0, `"${t.title}" — harga disepakati ${fmtNEAR(res.finalNEAR ?? 0)}.`, "ok", t.id));
       } else {
         t.status = "walked-away";
@@ -374,6 +382,12 @@ export default function Home() {
         if (res.outcome === "accepted") {
           t.finalNEAR = res.finalNEAR;
           t.status = "accepted";
+          const topup = round2((res.finalNEAR ?? 0) - t.plannedNEAR);
+          if (topup > 0) {
+            j.escrowLocked = round2(j.escrowLocked + topup);
+            j.log.push(`Harga akhir di atas rencana — escrow di-top-up ${fmtNEAR(topup)} (klien).`);
+            pushReceipt(s, j, newReceipt(j.id, "escrow-topup", "You (client)", "Foreman escrow", topup, `"${t.title}" — harga akhir ${fmtNEAR(res.finalNEAR ?? 0)} di atas rencana ${fmtNEAR(t.plannedNEAR)}.`, "info", t.id));
+          }
           pushReceipt(s, j, newReceipt(j.id, "quote-accepted", "Foreman", agent.name, res.finalNEAR ?? 0, `"${t.title}" — harga disepakati ${fmtNEAR(res.finalNEAR ?? 0)}.`, "ok", t.id));
         } else {
           t.status = "walked-away";
