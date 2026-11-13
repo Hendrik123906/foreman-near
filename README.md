@@ -8,7 +8,7 @@ agents, negotiates quotes, checks the work, and pays out — everything inside y
 budget, settled on NEAR.
 
 - **Live demo:** https://hendrik123906.github.io/foreman-near/
-- **Demo video:** https://www.youtube.com/watch?v=TODO (upload pending — see below)
+- **Demo video:** https://www.youtube.com/watch?v=Qesx296c-aU
 - **License:** MIT
 
 ## Try it — do X, see Y
